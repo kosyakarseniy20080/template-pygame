@@ -45,10 +45,18 @@ scale_rect = scale.get_rect(center=(WIDTH//2,HEIGHT//2))
 
 
 # ХК Спартак Москва
-spr_ing = pygame.image.load("./spartak.png")
+spr_ing = pygame.image.load("./spartak.jpg")
 scale_spr = pygame.transform.scale(spr_ing, (200,200))
 spr_rect = scale_spr.get_rect()
 spr_rect.center = 100, 100
+
+
+score = 0 
+score = score + 1
+font_style = pygame.font.SysFont("Times New Roman", 50)
+msg = font_style.render(f"Score: {score}", True,(100, 255, 100),(100,40,200))
+text_game_over = font_style.render("GAME OVER", True, RED, GREEN)
+
 
 
 # pygame.time.wait(5000)
@@ -60,21 +68,32 @@ while running:
     screen.fill(screenColor)
     screen.blit(scale,scale_rect)
     screen.blit(scale_spr,spr_rect)
+    screen.blit(msg,[20, 20])
 
     # рисуем прямоугольник в screen c цветом (100,50,200) с координатами и размером
     pygame.draw.rect(screen,(100,50,200),[x,y,width_player,height_player] )
+
     # рисуем яблоко
     pygame.draw.circle(screen,colorApple,[x_apple,y_apple],15)
-    if (x<0 or x > WIDTH - 50):
+    # Проигрыш
+    if (x<0 or x > WIDTH - width_player):
         running = False
-        pass
+        screen.blit(text_game_over, [500,500])
+        pygame.display.flip()
+        pygame.time.wait(5000)   
+
+
     # Столкновение с шариком
     if ((x < x_apple+15  and x < x_apple-15 < x + width_player) and (y < y_apple+15 and y < y_apple-15 < y + height_player)):
         width_player += 10
         x_apple = random.randint(0,WIDTH)
-        y_apple = random.randint(0,HEIGHT)
+        y_apple = random.randint(0,HEIGHT) 
 
-        scale_rect.center = x_apple, y_apple
+        score = score + 1
+        msg = font_style.render(f"Score: {score}", True,(100, 255, 100),(100,40,200))
+        
+        
+        scale_rect.center = (x_apple, y_apple)
 
         pygame.draw.circle(screen,colorApple,[x_apple,y_apple],15)
 
